@@ -32,10 +32,10 @@ class TestLeafNode(unittest.TestCase):
         self.assertEqual('<a href="https://www.google.com">Click me!</a>', node.to_html())
 
 
-    #Figuring out how to implement this check
-    # def test_throws_value_error(self):
-    #     node = LeafNode("a", None, {"href": "https://www.google.com"})
-    #     self.assertRaises(ValueError("Leaf nodes require a value"), node.to_html())
+    def test_throws_value_error(self):
+        with self.assertRaises(ValueError):
+            node = LeafNode("a", None, {"href": "https://www.google.com"})
+            html = node.to_html()
         
 
 class TestParentNode(unittest.TestCase):
