@@ -46,11 +46,11 @@ class LeafNode(HTMLNode):
         if self.tag is None:
             return self.value
         
-        return f"<{self.tag}{super().props_to_html()}>{self.value}</{self.tag}>"
+        return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
     
     
     def __repr__(self):
-        return f"HTMLNode({self.tag}, {self.value}, {self.props_to_html()})"
+        return f"LeafNode({self.tag}, {self.value}, {self.props_to_html()})"
     
 
 class ParentNode(HTMLNode):
@@ -65,7 +65,7 @@ class ParentNode(HTMLNode):
         if self.children is None:
             raise ValueError("No children attached to this parent node")
         
-        output = f"<{self.tag}{super().props_to_html()}>"
+        output = f"<{self.tag}{self.props_to_html()}>"
         for child in self.children:
             output += child.to_html()
 
@@ -74,4 +74,4 @@ class ParentNode(HTMLNode):
     
    
     def __repr__(self):
-        return f"HTMLNode({self.tag}, {self.children}, {self.props_to_html()})"
+        return f"ParentNode({self.tag}, {self.children}, {self.props_to_html()})"
