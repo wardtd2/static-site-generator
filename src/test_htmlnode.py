@@ -43,6 +43,16 @@ class TestParentNode(unittest.TestCase):
         node = ParentNode(
             "p",
             [
+                LeafNode(None, "Normal text"),
+            ],
+        )
+        self.assertEqual("<p>Normal text</p>", node.to_html())
+
+
+    def test_to_html_multiple_nodes(self):
+        node = ParentNode(
+            "p",
+            [
                 LeafNode("b", "Bold text"),
                 LeafNode(None, "Normal text"),
                 LeafNode("i", "italic text"),
@@ -88,25 +98,25 @@ class TestParentNode(unittest.TestCase):
     
     
     def test_to_html_nested_props(self):
-            node = ParentNode(
-                "p",
-                [
-                    LeafNode("b", "Bold text"),
-                    LeafNode(None, "Normal text"),
-                    LeafNode("i", "italic text"),
-                    LeafNode(None, "Normal text"),
-                    ParentNode(
-                        "p",
-                        [
-                            LeafNode("b", "Bold text"),
-                            LeafNode(None, "Normal text"),
-                            LeafNode("i", "italic text"),
-                            LeafNode("a", "Click me!", {"href": "https://www.google.com"}),
-                        ],
-                    )
-                ],
-            )
-            self.assertEqual('<p><b>Bold text</b>Normal text<i>italic text</i>Normal text<p><b>Bold text</b>Normal text<i>italic text</i><a href="https://www.google.com">Click me!</a></p></p>', node.to_html())
+        node = ParentNode(
+            "p",
+            [
+                LeafNode("b", "Bold text"),
+                LeafNode(None, "Normal text"),
+                LeafNode("i", "italic text"),
+                LeafNode(None, "Normal text"),
+                ParentNode(
+                    "p",
+                    [
+                        LeafNode("b", "Bold text"),
+                        LeafNode(None, "Normal text"),
+                        LeafNode("i", "italic text"),
+                        LeafNode("a", "Click me!", {"href": "https://www.google.com"}),
+                    ],
+                )
+            ],
+        )
+        self.assertEqual('<p><b>Bold text</b>Normal text<i>italic text</i>Normal text<p><b>Bold text</b>Normal text<i>italic text</i><a href="https://www.google.com">Click me!</a></p></p>', node.to_html())
 
 
 
