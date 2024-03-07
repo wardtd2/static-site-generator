@@ -13,7 +13,9 @@ class HTMLNode:
     def props_to_html(self):
         if self.props is None:
             return ""
+        
         output = ""
+        
         for key in self.props:
             output += f' {key}="{self.props[key]}"'
         return output
@@ -33,15 +35,35 @@ class HTMLNode:
     
 
 class LeafNode(HTMLNode):
-    def __init__(self, tag=None, value=None, props=None):
-        if value is None:
-            raise ValueError("Leaf nodes require a value")
+    def __init__(self, tag, value, props=None):
         super().__init__(tag, value, None, props)
 
     
     def to_html(self):
         if self.value is None:
             raise ValueError("Leaf nodes require a value") 
+        
         if self.tag is None:
             return self.value
+        
         return f"<{self.tag}{super().props_to_html()}>{self.value}</{self.tag}>"
+    
+
+class ParentNode(HTMLNode):
+    def __init__(self, tag, children, props=None):
+        super().__init__(tag, None, children, props)
+
+
+    def to_html(self):
+        if self.tag is None:
+            raise ValueError("Parent node must have a tag")
+        
+        if self.children is None:
+            raise ValueError("No children attached to this parent node")
+        
+        output = f"<{self.tag}{super().props_to_html()}>"
+        for child in self.children:
+            output += child.to_html()
+
+        output += f"</{self.tag}>"
+        return output

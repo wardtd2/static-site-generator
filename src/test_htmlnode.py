@@ -1,6 +1,6 @@
 import unittest
 
-from htmlnode import HTMLNode, LeafNode
+from htmlnode import HTMLNode, LeafNode, ParentNode
 
 
 class TestHTMLNode(unittest.TestCase):
@@ -33,9 +33,81 @@ class TestLeafNode(unittest.TestCase):
 
 
     #Figuring out how to implement this check
-    # def test_throws_value_error_with_empty_value(self):
+    # def test_throws_value_error(self):
     #     node = LeafNode("a", None, {"href": "https://www.google.com"})
     #     self.assertRaises(ValueError("Leaf nodes require a value"), node.to_html())
+        
+
+class TestParentNode(unittest.TestCase):
+    def test_to_html(self):
+        node = ParentNode(
+            "p",
+            [
+                LeafNode("b", "Bold text"),
+                LeafNode(None, "Normal text"),
+                LeafNode("i", "italic text"),
+                LeafNode(None, "Normal text"),
+            ],
+        )
+        self.assertEqual("<p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>", node.to_html())
+
+
+    def test_to_html_nested(self):
+        node = ParentNode(
+            "p",
+            [
+                LeafNode("b", "Bold text"),
+                LeafNode(None, "Normal text"),
+                LeafNode("i", "italic text"),
+                LeafNode(None, "Normal text"),
+                ParentNode(
+                    "p",
+                    [
+                        LeafNode("b", "Bold text"),
+                        LeafNode(None, "Normal text"),
+                        LeafNode("i", "italic text"),
+                        LeafNode(None, "Normal text"),
+                    ],
+                )
+            ],
+        )
+        self.assertEqual("<p><b>Bold text</b>Normal text<i>italic text</i>Normal text<p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p></p>", node.to_html())
+    
+    
+    def test_to_html_props(self):
+        node = ParentNode(
+            "p",
+            [
+                LeafNode("b", "Bold text"),
+                LeafNode(None, "Normal text"),
+                LeafNode("i", "italic text"),
+                LeafNode("a", "Click me!", {"href": "https://www.google.com"}),
+            ],
+        )
+        self.assertEqual('<p><b>Bold text</b>Normal text<i>italic text</i><a href="https://www.google.com">Click me!</a></p>', node.to_html())
+    
+    
+    def test_to_html_nested_props(self):
+            node = ParentNode(
+                "p",
+                [
+                    LeafNode("b", "Bold text"),
+                    LeafNode(None, "Normal text"),
+                    LeafNode("i", "italic text"),
+                    LeafNode(None, "Normal text"),
+                    ParentNode(
+                        "p",
+                        [
+                            LeafNode("b", "Bold text"),
+                            LeafNode(None, "Normal text"),
+                            LeafNode("i", "italic text"),
+                            LeafNode("a", "Click me!", {"href": "https://www.google.com"}),
+                        ],
+                    )
+                ],
+            )
+            self.assertEqual('<p><b>Bold text</b>Normal text<i>italic text</i>Normal text<p><b>Bold text</b>Normal text<i>italic text</i><a href="https://www.google.com">Click me!</a></p></p>', node.to_html())
+
 
 
 
