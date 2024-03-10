@@ -1,5 +1,5 @@
 import unittest
-from node_helpers import extract_markdown_images, extract_markdown_links, split_nodes_delimiter, split_nodes_image, split_nodes_link
+from node_helpers import extract_markdown_images, extract_markdown_links, split_nodes_delimiter, split_nodes_image, split_nodes_link, text_to_textnodes
 
 from textnode import TextNode
 
@@ -195,4 +195,23 @@ class TestTextNode(unittest.TestCase):
                 "second link", text_type_link, "https://i.imgur.com/3elNhQu.png"
             ),
             TextNode(" with some text on the end", text_type_text),
+        ])
+
+
+    def test_text_to_textnodes(self):
+        sample = "This is **text** with an *italic* word and a `code block` and an ![image](https://i.imgur.com/zjjcJKZ.png) and a [link](https://boot.dev)"
+        new_nodes = text_to_textnodes(sample)
+
+        self.assertEqual(new_nodes,
+            [
+            TextNode("This is ", text_type_text),
+            TextNode("text", text_type_bold),
+            TextNode(" with an ", text_type_text),
+            TextNode("italic", text_type_italic),
+            TextNode(" word and a ", text_type_text),
+            TextNode("code block", text_type_code),
+            TextNode(" and an ", text_type_text),
+            TextNode("image", text_type_image, "https://i.imgur.com/zjjcJKZ.png"),
+            TextNode(" and a ", text_type_text),
+            TextNode("link", text_type_link, "https://boot.dev"),
         ])
