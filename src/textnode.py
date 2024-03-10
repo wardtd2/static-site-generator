@@ -26,6 +26,7 @@ class TextNode:
     def __repr__(self):
         return f"TextNode({self.text}, {self.text_type}, {self.url})"
     
+    
     def text_node_to_html_node(text_node):
         if text_node.text_type == text_type_text:
             return LeafNode(None, text_node.text)
@@ -46,3 +47,24 @@ class TextNode:
             return LeafNode("img", "", {"src": text_node.url, "alt": text_node.text})
         
         raise ValueError("Unrecognized node type")
+    
+
+    def split_nodes_delimiter(old_nodes, delimiter, text_type):
+        new_nodes = []
+        for node in old_nodes:
+            if node.text_type is text_type_text:
+                targets = node.text.split(delimiter)
+                if len(targets) % 2 == 0:
+                    raise Exception("Invalid markdown syntax")
+                for i in range(0, len(targets)):
+                    if i % 2 == 0:
+                        if targets[i] == "":
+                            continue
+                        new_nodes.append(TextNode(targets[i], text_type_text, node.url))
+                    else:
+                        if targets[i] == "":
+                            continue
+                        new_nodes.append(TextNode(targets[i], text_type, node.url))
+            else:
+                new_nodes.append(node)
+        return new_nodes
