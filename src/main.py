@@ -1,4 +1,4 @@
-from node_helpers import text_node_to_html_node
+from inline_node_helpers import text_node_to_html_node
 from textnode import TextNode
 
 
