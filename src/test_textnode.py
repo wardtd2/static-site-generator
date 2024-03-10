@@ -1,4 +1,5 @@
 import unittest
+from node_helpers import extract_markdown_images, extract_markdown_links, split_nodes_delimiter
 
 from textnode import TextNode
 
@@ -47,14 +48,14 @@ class TestTextNode(unittest.TestCase):
         self.assertNotEqual(node, node2)
 
     
-    def test_rerp_func(self):
+    def test_repr_func(self):
         node = TextNode("This is a text node", "bold", "https://www.google.com")
         self.assertEqual("TextNode(This is a text node, bold, https://www.google.com)", repr(node))
 
     
     def test_split_nodes_code(self):
         node = TextNode("This is text with a `code block` word", text_type_text)
-        new_nodes = TextNode.split_nodes_delimiter([node], "`", text_type_code)
+        new_nodes = split_nodes_delimiter([node], "`", text_type_code)
         self.assertEqual(
             new_nodes,
             [
@@ -68,12 +69,12 @@ class TestTextNode(unittest.TestCase):
     def test_split_nodes_invalid_markdown(self):
         with self.assertRaises(Exception):
             node = TextNode("This is text with a `code block word", text_type_text)
-            new_nodes = TextNode.split_nodes_delimiter([node], "`", text_type_code)
+            new_nodes = split_nodes_delimiter([node], "`", text_type_code)
 
 
     def test_split_nodes_bold(self):
         node = TextNode("This is text with a **bold** word", text_type_text)
-        new_nodes = TextNode.split_nodes_delimiter([node], "**", text_type_bold)
+        new_nodes = split_nodes_delimiter([node], "**", text_type_bold)
         self.assertEqual(
             new_nodes,
             [
@@ -86,7 +87,7 @@ class TestTextNode(unittest.TestCase):
 
     def test_split_nodes_italics(self):
         node = TextNode("This is text with an *italicized* word", text_type_text)
-        new_nodes = TextNode.split_nodes_delimiter([node], "*", text_type_italic)
+        new_nodes = split_nodes_delimiter([node], "*", text_type_italic)
         self.assertEqual(
             new_nodes,
             [
@@ -99,7 +100,7 @@ class TestTextNode(unittest.TestCase):
 
     def test_split_nodes_first_word_delimited(self):
         node = TextNode("*This* is text with an italicized word", text_type_text)
-        new_nodes = TextNode.split_nodes_delimiter([node], "*", text_type_italic)
+        new_nodes = split_nodes_delimiter([node], "*", text_type_italic)
         self.assertEqual(
             new_nodes,
             [
@@ -111,7 +112,7 @@ class TestTextNode(unittest.TestCase):
 
     def test_split_nodes_last_word_delimited(self):
         node = TextNode("This is text with an italicized *word*", text_type_text)
-        new_nodes = TextNode.split_nodes_delimiter([node], "*", text_type_italic)
+        new_nodes = split_nodes_delimiter([node], "*", text_type_italic)
         self.assertEqual(
             new_nodes,
             [
@@ -123,7 +124,7 @@ class TestTextNode(unittest.TestCase):
 
     def test_split_nodes_multiple(self):
         node = TextNode("This is text with *multiple* *italicized* words", text_type_text)
-        new_nodes = TextNode.split_nodes_delimiter([node], "*", text_type_italic)
+        new_nodes = split_nodes_delimiter([node], "*", text_type_italic)
         self.assertEqual(
             new_nodes,
             [
@@ -139,7 +140,7 @@ class TestTextNode(unittest.TestCase):
 
     def test_split_nodes_multiple_delimiters(self):
         node = TextNode("This is `text` with an *italicized* word", text_type_text)
-        new_nodes = TextNode.split_nodes_delimiter([node], "*", text_type_italic)
+        new_nodes = split_nodes_delimiter([node], "*", text_type_italic)
         self.assertEqual(
             new_nodes,
             [
@@ -152,7 +153,7 @@ class TestTextNode(unittest.TestCase):
 
     def test_extract_markdown_images(self):
         text = "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and ![another](https://i.imgur.com/dfsdkjfd.png)"
-        self.assertEqual(TextNode.extract_markdown_images(text), [
+        self.assertEqual(extract_markdown_images(text), [
             ("image", "https://i.imgur.com/zjjcJKZ.png"),
             ("another", "https://i.imgur.com/dfsdkjfd.png")
         ])
@@ -160,7 +161,7 @@ class TestTextNode(unittest.TestCase):
 
     def test_extract_markdown_text(self):
         text = "This is text with a [link](https://www.example.com) and [another](https://www.example.com/another)"
-        self.assertEqual(TextNode.extract_markdown_links(text), [
+        self.assertEqual(extract_markdown_links(text), [
             ("link", "https://www.example.com"),
             ("another", "https://www.example.com/another")
         ])
