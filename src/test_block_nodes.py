@@ -1,13 +1,6 @@
 import unittest
 
-from block_nodes import markdown_to_blocks
-
-text_type_text = "text"
-text_type_bold = "bold"
-text_type_italic = "italic"
-text_type_code = "code"
-text_type_link = "link"
-text_type_image = "image"
+from block_nodes import markdown_to_blocks, block_to_block_type, block_type_code, block_type_heading, block_type_ordered_list, block_type_unordered_list, block_type_quote, block_type_paragraph
 
 
 class TestBlockNodes(unittest.TestCase):
@@ -41,4 +34,31 @@ This is the same paragraph on a new line
         self.assertEqual(markdown_to_blocks(markdown), ["This is **bolded** paragraph",
                                                          "This is another paragraph with *italic* text and `code` here\nThis is the same paragraph on a new line",
                                                          "* This is a list\n* with items"])
+    def test_block_to_block_type_heading(self):
+        md = "###### banana"
+        self.assertEqual(block_type_heading, block_to_block_type(md))
+
+
+    def test_block_to_block_type_code(self):
+        md = "``` banana ```"
+        self.assertEqual(block_type_code, block_to_block_type(md))
     
+
+    def test_block_to_block_type_quote(self):
+        md = "> banana\n> apple\n> orange"
+        self.assertEqual(block_type_quote, block_to_block_type(md))
+    
+
+    def test_block_to_block_type_unordered_list(self):
+        md = "* apple\n* orange\n* banana"
+        self.assertEqual(block_type_unordered_list, block_to_block_type(md))
+
+
+    def test_block_to_block_type_ordered_list(self):
+        md = "1. apple\n2. orange\n3. banana"
+        self.assertEqual(block_type_ordered_list, block_to_block_type(md))
+    
+
+    def test_block_to_block_type_paragraph(self):
+        md = "1. apple\n2. orange\n. banana"
+        self.assertEqual(block_type_paragraph, block_to_block_type(md))
