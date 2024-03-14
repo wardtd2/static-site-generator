@@ -60,3 +60,21 @@ def generate_page(from_path, template_path, dest_path):
     template_file.close()
     output_file.close()
     
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    if not os.path.exists(dir_path_content):
+        raise Exception(f"Unable to access source directory: {dir_path_content}")
+    if not os.path.exists(template_path):
+        raise Exception(f"Unable to access template at {template_path}")
+    print(f"Generating html based on markdown in {dir_path_content} and placing in {dest_dir_path}")
+    source_items = os.listdir(dir_path_content)
+    for item in source_items:
+        if os.path.isfile(os.path.join(dir_path_content, item)):
+            if item.endswith('.md'):
+                print(f"Converting {dir_path_content}/{item} to html and placing in {dest_dir_path}")
+                file_name = item[:-3] + ".html"
+                generate_page(os.path.join(dir_path_content, item), template_path, os.path.join(dest_dir_path, file_name))
+            else:
+                print(f"{item} is not a markdown file")
+        else:
+            generate_pages_recursive(os.path.join(dir_path_content, item), template_path, os.path.join(dest_dir_path, item))
