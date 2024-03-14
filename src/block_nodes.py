@@ -1,4 +1,5 @@
 from htmlnode import LeafNode, ParentNode
+from inline_nodes import text_node_to_html_node, text_to_textnodes
 
 
 
@@ -62,25 +63,33 @@ def block_to_html_quote(block):
     for line in lines:
         cleaned.append(line[1:].strip())
     content = "\n".join(cleaned)
-    return LeafNode("blockquote", content, None)
+    text_nodes = text_to_textnodes(content)
+    html_nodes = []
+    for node in text_nodes:
+        html_nodes.append(text_node_to_html_node(node))
+    return ParentNode("blockquote", html_nodes, None)
 
 
 def block_to_html_unordered_list(block):
     lines = block.split("\n")
     cleaned = []
     for line in lines:
-        cleaned.append(f"<li>{line[1:].strip()}")
-    content = "\n".join(cleaned)
-    return LeafNode("ul", content, None)
+        cleaned.append(f"{line[1:].strip()}")
+        html_nodes = []
+    for item in cleaned:
+        html_nodes.append(LeafNode("li", item))
+    return ParentNode("ul", html_nodes, None)
 
 
 def block_to_html_ordered_list(block):
     lines = block.split("\n")
     cleaned = []
     for line in lines:
-        cleaned.append(f"<li>{line[2:].strip()}")
-    content = "\n".join(cleaned)
-    return LeafNode("ol", content, None)
+        cleaned.append(f"{line[2:].strip()}")
+        html_nodes = []
+    for item in cleaned:
+        html_nodes.append(LeafNode("li", item))
+    return ParentNode("ol", html_nodes, None)
 
 
 def block_to_html_code(block):
@@ -111,9 +120,36 @@ def block_to_html_heading(block):
     elif block.startswith("###### "):
         tag = "h6"
         content = block[7:]
-    return LeafNode(tag, content, None)
+    text_nodes = text_to_textnodes(content)
+    html_nodes = []
+    for node in text_nodes:
+        html_nodes.append(text_node_to_html_node(node))
+    return ParentNode(tag, html_nodes, None)
 
 
 def block_to_html_paragraph(block):
-    return LeafNode("p", block, None)
-    
+    text_nodes = text_to_textnodes(block)
+    html_nodes = []
+    for node in text_nodes:
+        html_nodes.append(text_node_to_html_node(node))
+    return ParentNode("p", html_nodes)
+
+
+def markdown_to_html_node(markdown):
+    blocks = markdown_to_blocks(markdown)
+    child_nodes = []
+    for block in blocks:
+        type = block_to_block_type(block)
+        if type == block_type_paragraph:
+            child_nodes.append(block_to_html_paragraph(block))
+        elif type == block_type_code:
+            child_nodes.append(block_to_html_code(block))
+        elif type == block_type_heading:
+            child_nodes.append(block_to_html_heading(block))
+        elif type == block_type_quote:
+            child_nodes.append(block_to_html_quote(block))
+        elif type == block_type_unordered_list:
+            child_nodes.append(block_to_html_unordered_list(block))
+        elif type == block_type_ordered_list:
+            child_nodes.append(block_to_html_ordered_list(block))
+    return ParentNode("div", child_nodes)
