@@ -45,7 +45,7 @@ def generate_page(from_path, template_path, dest_path):
     with open(template_path, 'r') as template_file:
         template = template_file.read()
     
-    converted_html = markdown_to_html_node(input_content).to_html()
+    page_body = markdown_to_html_node(input_content).to_html()
     page_title = extract_title(input_content)
 
     dest_directory = os.path.dirname(dest_path)
@@ -53,9 +53,9 @@ def generate_page(from_path, template_path, dest_path):
     if not os.path.exists(dest_directory):
         os.makedirs(dest_directory)
     html_with_title = template.replace("{{ Title }}", page_title)
-    html_with_body = html_with_title.replace("{{ Content }}", converted_html)
+    html_with_title_and_body = html_with_title.replace("{{ Content }}", page_body)
     with open(dest_path, 'w') as output_file:
-        output_file.write(html_with_body)
+        output_file.write(html_with_title_and_body)
     input_file.close()
     template_file.close()
     output_file.close()

@@ -75,9 +75,13 @@ def block_to_html_unordered_list(block):
     cleaned = []
     for line in lines:
         cleaned.append(f"{line[1:].strip()}")
-        html_nodes = []
+    html_nodes = []
     for item in cleaned:
-        html_nodes.append(LeafNode("li", item))
+        inner_nodes = []
+        text_nodes = text_to_textnodes(item)
+        for node in text_nodes:
+            inner_nodes.append(text_node_to_html_node(node))
+        html_nodes.append(ParentNode("li", inner_nodes))
     return ParentNode("ul", html_nodes, None)
 
 
@@ -88,7 +92,11 @@ def block_to_html_ordered_list(block):
         cleaned.append(f"{line[2:].strip()}")
         html_nodes = []
     for item in cleaned:
-        html_nodes.append(LeafNode("li", item))
+        inner_nodes = []
+        text_nodes = text_to_textnodes(item)
+        for node in text_nodes:
+            inner_nodes.append(text_node_to_html_node(node))
+        html_nodes.append(ParentNode("li", inner_nodes))
     return ParentNode("ol", html_nodes, None)
 
 

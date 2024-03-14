@@ -89,18 +89,18 @@ This is the same paragraph on a new line
     def test_block_to_html_unordered_list(self):
         md = "* apple\n* orange\n* banana"
         self.assertEqual(ParentNode("ul", [
-                            LeafNode("li", "apple"),
-                            LeafNode("li", "orange"),
-                            LeafNode("li", "banana"),
+                            ParentNode("li", [LeafNode(None, "apple")]),
+                            ParentNode("li", [LeafNode(None, "orange")]),
+                            ParentNode("li", [LeafNode(None, "banana")]),
                             ]), block_to_html_unordered_list(md))
 
 
     def test_block_to_html_ordered_list(self):
         md = "1. apple\n2. orange\n3. banana"
         self.assertEqual(ParentNode("ol", [
-                            LeafNode("li", "apple"),
-                            LeafNode("li", "orange"),
-                            LeafNode("li", "banana"),
+                            ParentNode("li", [LeafNode(None, "apple")]),
+                            ParentNode("li", [LeafNode(None, "orange")]),
+                            ParentNode("li", [LeafNode(None, "banana")]),
                             ]), block_to_html_ordered_list(md))
 
 
@@ -137,8 +137,8 @@ This is the same paragraph on a new line
                 LeafNode(None, " here\nThis is the same paragraph on a new line")
             ]),
             ParentNode("ul",[
-                LeafNode("li", "This is a list"),
-                LeafNode("li", "with items"),
+                ParentNode("li", [LeafNode(None, "This is a list")]),
+                ParentNode("li", [LeafNode(None, "with items")]),
             ]),
         ])
         self.assertEqual(expected, markdown_to_html_node(markdown))
