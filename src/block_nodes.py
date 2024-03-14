@@ -1,5 +1,4 @@
-from htmlnode import LeafNode
-from textnode import TextNode
+from htmlnode import LeafNode, ParentNode
 
 
 
@@ -56,4 +55,62 @@ def block_to_block_type(block):
         return block_type_ordered_list
     return block_type_paragraph
 
+
+def block_to_html_quote(block):
+    lines = block.split("\n")
+    for line in lines:
+        line = line[1:].trim()
+    content = "\n".join(lines)
+    return LeafNode("blockquote", content, None)
+
+
+def block_to_html_unordered_list(block):
+    lines = block.split("\n")
+    for line in lines:
+        line = f"<li>{line[1:].trim()}"
+    content = "\n".join(lines)
+    return LeafNode("ul", content, None)
+
+
+def block_to_html_ordered_list(block):
+    lines = block.split("\n")
+    for line in lines:
+        line = f"<li>{line[1:].trim()}"
+    content = "\n".join(lines)
+    return LeafNode("ol", content, None)
+
+
+def block_to_html_code(block):
+    content = block[3:-3]
+    inner_node = LeafNode("code", content, None)
+    outer_node = ParentNode("pre", [inner_node], None)
+    return outer_node
+
+
+def block_to_html_heading(block):
+    tag = ""
+    content = ""
+    if block.startswith("# "):
+        tag = "h1"
+        content = block[2:]
+    elif block.startswith("## "):
+        tag = "h2"
+        content = block[3:]
+    elif block.startswith("### "):
+        tag = "h3"
+        content = block[4:]
+    elif block.startswith("#### "):
+        tag = "h4"
+        content = block[5:]
+    elif block.startswith("##### "):
+        tag = "h5"
+        content = block[6:]
+    elif block.startswith("###### "):
+        tag = "h6"
+        content = block[7:]
+    return LeafNode(tag, content, None)
+
+
+def block_to_html_paragraph(block):
+    return LeafNode("p", block, None)
     
