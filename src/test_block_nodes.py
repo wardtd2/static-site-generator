@@ -81,7 +81,7 @@ This is the same paragraph on a new line
 
     def test_block_to_html_code(self):
         md = "``` banana ```"
-        inner = LeafNode("code", " banana ")
+        inner = ParentNode("code", [LeafNode(None, " banana ")])
         outer = ParentNode("pre", [inner])
         self.assertEqual(outer, block_to_html_code(md))
 
