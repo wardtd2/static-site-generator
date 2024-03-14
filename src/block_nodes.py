@@ -58,25 +58,28 @@ def block_to_block_type(block):
 
 def block_to_html_quote(block):
     lines = block.split("\n")
+    cleaned = []
     for line in lines:
-        line = line[1:].trim()
-    content = "\n".join(lines)
+        cleaned.append(line[1:].strip())
+    content = "\n".join(cleaned)
     return LeafNode("blockquote", content, None)
 
 
 def block_to_html_unordered_list(block):
     lines = block.split("\n")
+    cleaned = []
     for line in lines:
-        line = f"<li>{line[1:].trim()}"
-    content = "\n".join(lines)
+        cleaned.append(f"<li>{line[1:].strip()}")
+    content = "\n".join(cleaned)
     return LeafNode("ul", content, None)
 
 
 def block_to_html_ordered_list(block):
     lines = block.split("\n")
+    cleaned = []
     for line in lines:
-        line = f"<li>{line[1:].trim()}"
-    content = "\n".join(lines)
+        cleaned.append(f"<li>{line[2:].strip()}")
+    content = "\n".join(cleaned)
     return LeafNode("ol", content, None)
 
 
