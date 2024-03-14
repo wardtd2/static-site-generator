@@ -24,9 +24,14 @@ def markdown_to_blocks(markdown):
 
 
 def block_to_block_type(block):
-    first_char = char = block[0]
-    if first_char == "#":
-        return block_type_heading
+    first_char = block[0]
+    if (block[0:2] == "# "
+        or block[0:3] == "## "
+        or block[0:4] == "### "
+        or block[0:5] == "#### "
+        or block[0:6] == "##### "
+        or block[0:7] == "###### "):
+            return block_type_heading
     if block[0:3] == "```" and block[-3:] == "```":
         return block_type_code
     if first_char == ">":
