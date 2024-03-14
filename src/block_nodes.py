@@ -94,7 +94,11 @@ def block_to_html_ordered_list(block):
 
 def block_to_html_code(block):
     content = block[3:-3]
-    inner_node = LeafNode("code", content, None)
+    text_nodes = text_to_textnodes(content)
+    html_nodes = []
+    for node in text_nodes:
+        html_nodes.append(text_node_to_html_node(node))
+    inner_node = ParentNode("code", html_nodes, None)
     outer_node = ParentNode("pre", [inner_node], None)
     return outer_node
 
